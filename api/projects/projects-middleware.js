@@ -6,7 +6,6 @@ const projIdValidation = (req, res, next) => {
     projModel.get(id)
         .then(proj => {
             if (!proj) {
-                console.log("OOPS")
                 res.status(404).json({
                     message: `OOPS!  doesn't look like a project with id (${id}) exists`
                 })
@@ -20,6 +19,19 @@ const projIdValidation = (req, res, next) => {
 
 const projBodyValidation = (req, res, next) => {
     console.log('PROJ_BODY_VALIDATION')
+    const { name, description, completed } = req.body 
+    if (!name || !description || !completed) {
+        res.status(400).json({
+            message: 'name, description, and completed status are all required'
+        })
+    } else {
+        req.proj = {
+            name: name.trim(),
+            description: description.trim(),
+            completed: completed
+        }
+        next()
+    }
 }
 
 

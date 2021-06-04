@@ -21,8 +21,15 @@ router.get('/api/projects/:id', projIdValidation,  (req, res) => {
     res.status(200).json(req.proj)
 })
 
-router.post('/api/projects/', projBodyValidation, async (req, res) => {
+router.post('/api/projects/', projBodyValidation, async (req, res, next) => {
     //add new project to DB and responds with new proj
+    try {
+        const newProj = await projModel.insert(req.proj)
+        res.status(201).json(newProj)
+    } catch (err) {
+        next(err)
+    }
+
 })
 
 router.put('/api/projects/:id', projIdValidation, projBodyValidation, async (req, res) => {
@@ -35,5 +42,14 @@ router.delete('/api/projects/:id', projIdValidation, async (req, res) => {
 
 router.get('/api/projects/:id/actions', projIdValidation, async (req, res) => {
     //gets all actions in specified project using its ID
+})
+
+router.use((err, req, res, next) => {
+    console.log('ERROR HANDLING KICKED IN')
+    res.status(err.status || 500).json({
+        message: 'hmmmst something bad happend in of Projects',
+        error: err.message,
+        stack: err.stack
+    })
 })
 module.exports = router;
