@@ -17,8 +17,8 @@ router.get('/api/projects', async (req, res, next) => {
     }
 })
 
-router.get('/api/projects/:id', projIdValidation, async (req, res, next) => {
-    //gets project by id
+router.get('/api/projects/:id', projIdValidation,  (req, res) => {
+    res.status(200).json(req.proj)
 })
 
 router.post('/api/projects/', projBodyValidation, async (req, res) => {
