@@ -34,7 +34,6 @@ const projBodyValidation = (req, res, next) => {
     }
 }
 
-
 module.exports = {
     projIdValidation,
     projBodyValidation

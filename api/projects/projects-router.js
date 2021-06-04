@@ -5,9 +5,9 @@ const {
     projBodyValidation
 } = require('./projects-middleware')
 
-const router = express.Router()
+const projRouter = express.Router()
 
-router.get('/api/projects', async (req, res, next) => {
+projRouter.get('/api/projects', async (req, res, next) => {
     try {
         const projects = await projModel.get()
         res.status(200).json(projects)
@@ -16,11 +16,11 @@ router.get('/api/projects', async (req, res, next) => {
     }
 })
 
-router.get('/api/projects/:id', projIdValidation,  (req, res) => {
+projRouter.get('/api/projects/:id', projIdValidation,  (req, res) => {
     res.status(200).json(req.proj)
 })
 
-router.post('/api/projects/', projBodyValidation, async (req, res, next) => {
+projRouter.post('/api/projects/', projBodyValidation, async (req, res, next) => {
     //add new project to DB and responds with new proj
     try {
         const newProj = await projModel.insert(req.updated)
@@ -31,7 +31,7 @@ router.post('/api/projects/', projBodyValidation, async (req, res, next) => {
 
 })
 
-router.put('/api/projects/:id', projIdValidation, projBodyValidation, async (req, res, next) => {
+projRouter.put('/api/projects/:id', projIdValidation, projBodyValidation, async (req, res, next) => {
     //updates existing proj and returns updated object
     const { id } = req.params
     try {
@@ -42,7 +42,7 @@ router.put('/api/projects/:id', projIdValidation, projBodyValidation, async (req
     }
 })
 
-router.delete('/api/projects/:id', projIdValidation,  (req, res, next) => {
+projRouter.delete('/api/projects/:id', projIdValidation,  (req, res, next) => {
     projModel.remove(req.params.id)
         .then(() => {
             res.status(204).json({message: 'successfully deleted'})
@@ -50,7 +50,7 @@ router.delete('/api/projects/:id', projIdValidation,  (req, res, next) => {
         .catch(next)
 })
 
-router.get('/api/projects/:id/actions', projIdValidation, (req, res, next) => {
+projRouter.get('/api/projects/:id/actions', projIdValidation, (req, res, next) => {
     projModel.getProjectActions(req.params.id)
         .then(actions => {
             res.status(200).json(actions)
@@ -58,7 +58,7 @@ router.get('/api/projects/:id/actions', projIdValidation, (req, res, next) => {
         .catch(next)
 })
 
-router.use((err, req, res, next) => {
+projRouter.use((err, req, res, next) => {
     console.log('ERROR HANDLING KICKED IN')
     res.status(err.status || 500).json({
         message: 'hmmmst something bad happend in of Projects',
@@ -67,4 +67,4 @@ router.use((err, req, res, next) => {
     })
 })
 
-module.exports = router;
+module.exports = projRouter;
