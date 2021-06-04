@@ -1,4 +1,3 @@
-// Write your "projects" router here!
 const express = require('express')
 const projModel = require('./projects-model')
 const {
@@ -51,8 +50,12 @@ router.delete('/api/projects/:id', projIdValidation,  (req, res, next) => {
         .catch(next)
 })
 
-router.get('/api/projects/:id/actions', projIdValidation, async (req, res) => {
-    //gets all actions in specified project using its ID
+router.get('/api/projects/:id/actions', projIdValidation, (req, res, next) => {
+    projModel.getProjectActions(req.params.id)
+        .then(actions => {
+            res.status(200).json(actions)
+        })
+        .catch(next)
 })
 
 router.use((err, req, res, next) => {
@@ -63,4 +66,5 @@ router.use((err, req, res, next) => {
         stack: err.stack
     })
 })
+
 module.exports = router;
