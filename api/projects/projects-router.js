@@ -58,7 +58,7 @@ projRouter.get('/api/projects/:id/actions', projIdValidation, (req, res, next) =
         .catch(next)
 })
 
-projRouter.use((err, req, res, next) => {
+projRouter.use((err, req, res, next) => { //eslint-disable-line
     console.log('ERROR HANDLING KICKED IN')
     res.status(err.status || 500).json({
         message: 'hmmmst something bad happend in of Projects',
