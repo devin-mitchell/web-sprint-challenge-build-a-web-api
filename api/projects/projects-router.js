@@ -24,7 +24,7 @@ router.get('/api/projects/:id', projIdValidation,  (req, res) => {
 router.post('/api/projects/', projBodyValidation, async (req, res, next) => {
     //add new project to DB and responds with new proj
     try {
-        const newProj = await projModel.insert(req.proj)
+        const newProj = await projModel.insert(req.updated)
         res.status(201).json(newProj)
     } catch (err) {
         next(err)
@@ -32,12 +32,23 @@ router.post('/api/projects/', projBodyValidation, async (req, res, next) => {
 
 })
 
-router.put('/api/projects/:id', projIdValidation, projBodyValidation, async (req, res) => {
+router.put('/api/projects/:id', projIdValidation, projBodyValidation, async (req, res, next) => {
     //updates existing proj and returns updated object
+    const { id } = req.params
+    try {
+        const editedProj = await projModel.update(id, req.updated)
+        res.status(200).json(editedProj)
+    } catch (err) {
+        next(err)
+    }
 })
 
-router.delete('/api/projects/:id', projIdValidation, async (req, res) => {
-    //deletes project by ID
+router.delete('/api/projects/:id', projIdValidation,  (req, res, next) => {
+    projModel.remove(req.params.id)
+        .then(() => {
+            res.status(204).json({message: 'successfully deleted'})
+        })
+        .catch(next)
 })
 
 router.get('/api/projects/:id/actions', projIdValidation, async (req, res) => {

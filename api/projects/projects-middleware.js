@@ -25,7 +25,7 @@ const projBodyValidation = (req, res, next) => {
             message: 'name, description, and completed status are all required'
         })
     } else {
-        req.proj = {
+        req.updated = {
             name: name.trim(),
             description: description.trim(),
             completed: completed
